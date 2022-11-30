@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>mysql | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="创建数据库创建数据库的方法有1.create database （数据库名）；2.用mysqladmin 创建数据库: mysqladmin -u root -p create (数据库名)3利用PHP脚本创建数据库 删除数据库1.drop database （数据库名字）； 选择数据库1.利用 use（数据库名字） 修改数据库1.修改数据库的输入数据类型格式：alter table （表名） m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql">
+<meta property="og:url" content="http://example.com/2022/11/25/mysql/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="创建数据库创建数据库的方法有1.create database （数据库名）；2.用mysqladmin 创建数据库: mysqladmin -u root -p create (数据库名)3利用PHP脚本创建数据库 删除数据库1.drop database （数据库名字）； 选择数据库1.利用 use（数据库名字） 修改数据库1.修改数据库的输入数据类型格式：alter table （表名） m">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-25T15:29:05.000Z">
+<meta property="article:modified_time" content="2022-11-25T15:34:26.664Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-mysql" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/25/mysql/" class="article-date">
+  <time class="dt-published" datetime="2022-11-25T15:29:05.000Z" itemprop="datePublished">2022-11-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      mysql
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>创建数据库<br>创建数据库的方法有<br>1.create database （数据库名）；<br>2.用mysqladmin 创建数据库: mysqladmin -u root -p create (数据库名)<br>3利用PHP脚本创建数据库</p>
+<p>删除数据库<br>1.drop database （数据库名字）；</p>
+<p>选择数据库<br>1.利用 use（数据库名字）</p>
+<p>修改数据库<br>1.修改数据库的输入数据类型<br>格式：alter table （表名） modify （要修改的内容）<br>2.增添数据库中的一个输入项<br>格式：alter table （表名）add （要增加的内容）<br>3.更改原本的数据库项目名字<br>格式： alter table （表名）change column（要修改的） （修改结果）（数据类型）<br>4.修改表名<br>格式：alter table （原本表名） rename （现在想要的表名）<br>这两个都是属于结构设计范畴的。</p>
+<p>mysql的增删改查<br>首先是它们的语句命令</p>
+<p>增:insert<br>删:delete<br>改：update<br>查:SELECT或者show<br>格式<br>向所有字段插入：insert into 表名（字段1，字段2，字段3……）values(值1,值2，值3……)；<br>向指定字段插入:insert into 表名（指定字段集合） valuse（指定字段值）;<br>一些最重要的 SQL 命令<br>SELECT - 从数据库中提取数据<br>UPDATE - 更新数据库中的数据<br>DELETE - 从数据库中删除数据<br>INSERT INTO - 向数据库中插入新数据<br>CREATE DATABASE - 创建新数据库<br>ALTER DATABASE - 修改数据库<br>CREATE TABLE - 创建新表<br>ALTER TABLE - 变更（改变）数据库表<br>DROP TABLE - 删除表<br>CREATE INDEX - 创建索引（搜索键）<br>DROP INDEX - 删除索引<br>分享一个视频<br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1PT4y1e7UU/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d55b537d00b0b824d18599e818c415a1">https://www.bilibili.com/video/BV1PT4y1e7UU/?spm_id_from=333.337.search-card.all.click&amp;vd_source=d55b537d00b0b824d18599e818c415a1</a><br>个人感觉讲得他还是不错的，比较适合零基础。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/25/mysql/" data-id="clb3tff3100022kttctpn9rn1" data-title="mysql" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/11/24/today/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">today</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/11/25/mysql/">mysql</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/today/">today</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/20/%E4%BB%8E%E4%BB%8A%E5%A4%A9%E8%B5%B7%E5%9D%9A%E6%8C%81%E5%8F%91%E5%8D%9A%E5%AE%A2/">打卡博客，记录web成长</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/25/%E2%80%9C%E7%AC%AC%E4%BA%8C%E7%AF%87%E2%80%9D/">“第二篇”</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/20/1/">1</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
